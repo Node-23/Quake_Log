@@ -2,20 +2,20 @@ package classes.controladores;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
 
 import classes.depedencias.Game;
 import classes.depedencias.GameLineReference;
 import classes.depedencias.Player;
 
 public class GameSetter {
-
-    public static ArrayList<Game> setGames() {
+    public static ArrayList<Game> setGames(Scanner scanner) {
         int init = -1;
         ArrayList<GameLineReference> gameLineReferences = new ArrayList<GameLineReference>();
         ArrayList<Game> partidas = new ArrayList<Game>();
         try {
-            // TODO o usuário deve digitar o caminho do arquivo.
-            String[] log = LogReader.reader("/home/matheus/Área de Trabalho/games.log");
+            String[] log = LogReader.reader(scanner);
             for (int i = 0; i < log.length; i++) {
                 if (log[i].contains("InitGame:")) {
                     init = i + 1; // Queremos a linha após o initgame, logo i+1
@@ -30,7 +30,6 @@ public class GameSetter {
             for (int i = 0; i < gameLineReferences.size(); i++) {
                 partidas.add(criadorDePartidas(i + 1, gameLineReferences.get(i), log));
             }
-
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -66,7 +65,8 @@ public class GameSetter {
                 computarKillsTotais(partida);
 
                 String[] linhaDoLogSplitada = log[i].split(":");
-                String[] killInfo = linhaDoLogSplitada[2].split(" ");//[0] = quem matou; [1] = quem morreu; [2] = como morreu
+                String[] killInfo = linhaDoLogSplitada[2].split(" ");// [0] = quem matou; [1] = quem morreu; [2] = como
+                                                                     // morreu
 
                 int idMatador = Integer.parseInt(killInfo[1]);
                 int idVitima = Integer.parseInt(killInfo[2]);
@@ -93,7 +93,8 @@ public class GameSetter {
         return -1;
     }
 
-    //TODO mudar esse método para ao receber o id devolver um player(Deixaria o código mais limpo)
+    // TODO mudar esse método para ao receber o id devolver um player(Deixaria o
+    // código mais limpo)
     private static int pegarIndexPlayer(int playerId, ArrayList<Player> players) {
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).getId() == playerId) {
@@ -131,8 +132,38 @@ public class GameSetter {
         partida.setTotal_kills(partida.getTotal_kills() + 1);
     }
 
-    private static void playerDesconectado(int playerId, ArrayList<Player> players){
+    private static void playerDesconectado(int playerId, ArrayList<Player> players) {
         int index = pegarIndexPlayer(playerId, players);
         players.remove(index);
+    }
+
+    public static String gerarRelatorio(ArrayList<Game> partidas){
+        String relatorio= "-RELATÓRIO GERAL-\n";
+        for (int i = 0; i < partidas.size(); i++) {
+            relatorio += gerarRelatorio(i+1, partidas)+"\n";
+        }
+        return relatorio;
+    }
+
+    public static String gerarRelatorio(int gameId, ArrayList<Game> partidas){
+        //TODO exception caso não ache a partida
+        String relatorio ="-RELATÓRIO PARTIDA " + gameId+"-\n"+
+        "       Ranking:\n";
+        Game partida = retornarPartidaPorId(gameId, partidas);
+        Collections.sort(partida.getPlayers());
+        for (int i = 0; i < partida.getPlayers().size(); i++) {
+            relatorio += "  " + (i+1) + "-" +partida.getPlayers().get(i).getNick()+ "," + partida.getPlayers().get(i).getKills()+ " Kills"+
+            "\n";
+        }
+        return relatorio;
+    }
+
+    private static Game retornarPartidaPorId(int gameId, ArrayList<Game> partidas){
+        for (Game game : partidas) {
+           if(game.getId() == gameId){
+               return game;
+           }
+       }
+       return null;
     }
 }

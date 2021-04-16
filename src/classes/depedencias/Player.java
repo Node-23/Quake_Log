@@ -1,6 +1,6 @@
 package classes.depedencias;
 
-public class Player {
+public class Player implements Comparable<Player>{
     private int id;
     private String nick;
     private int kills;
@@ -28,6 +28,11 @@ public class Player {
 
     public void setKills(int kills) {
         this.kills = kills;
+    }
+
+    @Override
+    public int compareTo(Player pPlayer) {
+        return (pPlayer.getKills() - this.kills);
     }
 
 }
