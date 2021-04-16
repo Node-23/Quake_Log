@@ -1,4 +1,4 @@
-package classes.depedencias;
+package depedencias;
 
 public class Player implements Comparable<Player>{
     private int id;

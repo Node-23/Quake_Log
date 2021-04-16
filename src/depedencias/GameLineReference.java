@@ -1,4 +1,4 @@
-package classes.depedencias;
+package depedencias;
 
 public class GameLineReference {
     private int init;

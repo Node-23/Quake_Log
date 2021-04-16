@@ -1,4 +1,4 @@
-package classes.depedencias;
+package depedencias;
 
 import java.util.ArrayList;
 

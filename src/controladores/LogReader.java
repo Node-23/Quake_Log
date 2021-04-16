@@ -1,4 +1,4 @@
-package classes.controladores;
+package controladores;
 
 import java.io.File;
 import java.io.IOException;

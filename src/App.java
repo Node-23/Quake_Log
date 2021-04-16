@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import classes.controladores.GameSetter;
-import classes.controladores.Writer;
-import classes.depedencias.Game;
+import controladores.GameSetter;
+import controladores.Writer;
+import depedencias.Game;
 
 public class App {
     public static void main(String[] args) throws Exception {

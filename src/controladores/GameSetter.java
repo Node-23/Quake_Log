@@ -1,13 +1,13 @@
-package classes.controladores;
+package controladores;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
-import classes.depedencias.Game;
-import classes.depedencias.GameLineReference;
-import classes.depedencias.Player;
+import depedencias.Game;
+import depedencias.GameLineReference;
+import depedencias.Player;
 
 public class GameSetter {
     public static ArrayList<Game> setGames(Scanner scanner) {
