@@ -5,10 +5,12 @@ import java.util.ArrayList;
 public class Game {
     private int id;
     private int total_kills = 0;
-    ArrayList<Player> players = new ArrayList<Player>();
+    ArrayList<Player> players;
 
     public Game(int id) {
         this.id = id;
+        this.total_kills = 0;
+        this.players = new ArrayList<Player>();
     }
 
     public int getId() {

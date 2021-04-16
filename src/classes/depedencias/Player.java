@@ -3,10 +3,11 @@ package classes.depedencias;
 public class Player {
     private int id;
     private String nick;
-    private int kills = 0;
+    private int kills;
 
     public Player(int id) {
         this.id = id;
+        this.kills =0;
     }
 
     public int getId() {
