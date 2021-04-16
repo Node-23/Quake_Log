@@ -7,6 +7,7 @@ import java.nio.file.Files;
 public class LogReader {
     
     public static String[] reader(String path) throws IOException{
+        //TODO exception para caso não ache o arquivo
         File file = new File(path);
         byte[] bytes = Files.readAllBytes(file.toPath());
         String logText = new String(bytes, "UTF-8");

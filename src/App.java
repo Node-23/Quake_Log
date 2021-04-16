@@ -8,7 +8,7 @@ public class App {
         ArrayList<Game> partidas = GameSetter.setGames();
         
         for (Game partida : partidas) {
-            System.out.println(partida);
+            System.out.println(partida + "\n");
         }
     }
 }
