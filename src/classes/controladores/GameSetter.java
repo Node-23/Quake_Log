@@ -48,9 +48,8 @@ public class GameSetter {
             if (log[i].contains("ClientConnect:")) {
                 String[] linhaDoLogSplitada = log[i].split(" ");
                 int playerId = separarId(linhaDoLogSplitada); // TODO exception caso não ache o id do player
-                if(!playerExiste(playerId, partida.getPlayers())){
-                    partida.setPlayers(new Player(playerId));
-                }
+                partida.setPlayers(new Player(playerId));
+                continue;
             }
 
             if (log[i].contains("ClientUserinfoChanged:")) {
@@ -60,6 +59,7 @@ public class GameSetter {
                 String[] clientInfo = log[i].split("\\\\");
                 String nick = clientInfo[1];
                 partida.getPlayers().get(index).setNick(nick);
+                continue;
             }
 
             if (log[i].contains("Kill:")) {
@@ -71,6 +71,14 @@ public class GameSetter {
                 int idMatador = Integer.parseInt(killInfo[1]);
                 int idVitima = Integer.parseInt(killInfo[2]);
                 computarKills(idMatador, idVitima, partida.getPlayers());
+                continue;
+            }
+
+            if (log[i].contains("ClientDisconnect:")) {
+                String[] linhaDoLogSplitada = log[i].split(" ");
+                int playerId = separarId(linhaDoLogSplitada); // TODO exception caso não ache o id do player
+                playerDesconectado(playerId, partida.getPlayers());
+                continue;
             }
         }
         return partida;
@@ -85,15 +93,7 @@ public class GameSetter {
         return -1;
     }
 
-    private static boolean playerExiste(int playerId, ArrayList<Player> players){
-        for (int i = 0; i < players.size(); i++) {
-            if(playerId == players.get(i).getId()){
-                return true;
-            }
-        }
-        return false;
-    }
-
+    //TODO mudar esse método para ao receber o id devolver um player(Deixaria o código mais limpo)
     private static int pegarIndexPlayer(int playerId, ArrayList<Player> players) {
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).getId() == playerId) {
@@ -129,5 +129,10 @@ public class GameSetter {
 
     private static void computarKillsTotais(Game partida) {
         partida.setTotal_kills(partida.getTotal_kills() + 1);
+    }
+
+    private static void playerDesconectado(int playerId, ArrayList<Player> players){
+        int index = pegarIndexPlayer(playerId, players);
+        players.remove(index);
     }
 }
