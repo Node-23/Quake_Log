@@ -1,9 +1,11 @@
 package classes.depedencias;
 
+import java.util.ArrayList;
+
 public class Game {
     private int id;
-    private int total_kills;
-    private Player[] players;
+    private int total_kills = 0;
+    ArrayList<Player> players = new ArrayList<Player>();
 
     public Game(int id) {
         this.id = id;
@@ -21,13 +23,15 @@ public class Game {
         this.total_kills = total_kills;
     }
 
-    public Player[] getPlayers() {
+
+    public ArrayList<Player> getPlayers() {
         return this.players;
     }
 
-    public void setPlayers(Player[] players) {
-        this.players = players;
+    public void setPlayers(Player player) {
+        this.players.add(player);
     }
+
 
     @Override
     public String toString() {
@@ -40,11 +44,11 @@ public class Game {
 
     private String listaDePlayers() {
         String playersList = "";
-        for (int i = 0; i < players.length; i++) {
-            if (i == players.length - 1) {
-                playersList += "'" + players[i].getNick() + "']";
+        for (int i = 0; i < players.size(); i++) {
+            if (i == players.size() - 1) {
+                playersList += "'" + players.get(i).getNick() + "']";
             } else {
-                playersList += "'" + players[i].getNick() + "', ";
+                playersList += "'" + players.get(i).getNick() + "', ";
             }
         }
         return playersList;
@@ -52,11 +56,11 @@ public class Game {
 
     private String listaDeKills() {
         String killList = "";
-        for (int i = 0; i < players.length; i++) {
-            if (i == players.length - 1) {
-                killList += "'" + players[i].getNick() + "': " + players[i].getKills() + "\n}";
+        for (int i = 0; i < players.size(); i++) {
+            if (i == players.size() - 1) {
+                killList += "'" + players.get(i).getNick() + "': " + players.get(i).getKills() + "\n}";
             } else {
-                killList += "'" + players[i].getNick() + "': " + players[i].getKills() + ",\n";
+                killList += "'" + players.get(i).getNick() + "': " + players.get(i).getKills() + ",\n";
             }
         }
         return killList;
