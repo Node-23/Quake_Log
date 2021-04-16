@@ -1,14 +1,12 @@
-package model;
+package classes.depedencias;
 
 public class Game {
     private int id;
     private int total_kills;
     private Player[] players;
 
-    public Game(int id, int total_kills, Player[] players) {
+    public Game(int id) {
         this.id = id;
-        this.total_kills = total_kills;
-        this.players = players;
     }
 
     public int getId() {

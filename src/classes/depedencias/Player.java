@@ -1,4 +1,4 @@
-package model;
+package classes.depedencias;
 
 public class Player {
     private String nick;
