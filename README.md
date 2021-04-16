@@ -1,14 +1,14 @@
-## Getting Started
+## Estrutura das pastas
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+O workspace possui as pastas padrão:
+    - `src`: Pasta que contém os códigos-fonte.
+    - `lib`: Pasta que contém as dependências.
 
-## Folder Structure
+A pasta src possui a pasta classes e esta, por sua vez possui outras 2 pastas:
+    - `controladores`: Pasta que contém os códigos de códigos de controle (setar as partidas, ler o log).
+    - `dependencias`: Pasta que contém os objetos usados no projeto.
 
-The workspace contains two folders by default, where:
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## Regras para setar as partidas
 
-## Dependency Management
-
-The `JAVA DEPENDENCIES` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-pack/blob/master/release-notes/v0.9.0.md#work-with-jar-files-directly).
+No código consideramos que quando um player se desconecta os dados, id e quantidade de kills, dele são perdidos.
