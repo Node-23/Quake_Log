@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
+import depedencias.DeathType;
 import depedencias.Game;
 import depedencias.GameLineReference;
 import depedencias.Player;
@@ -20,7 +21,7 @@ public class GameSetter {
                 if (log[i].contains("InitGame:")) {
                     init = i + 1; // Queremos a linha após o initgame, logo i+1
                 }
-                if (log[i].contains("ShutdownGame:") && init != -1) {
+                if (log[i].contains("------------------------------------------------------------") && init != -1) {
                     gameLineReferences.add(new GameLineReference(init, i - 1)); // Queremos a linha antes do
                                                                                 // shutdowngame logo, i-1
                     init = -1;
@@ -65,9 +66,11 @@ public class GameSetter {
                 computarKillsTotais(partida);
 
                 String[] linhaDoLogSplitada = log[i].split(":");
-                String[] killInfo = linhaDoLogSplitada[2].split(" ");// [0] = quem matou; [1] = quem morreu; [2] = como
-                                                                     // morreu
-
+                String[] linhaTipoDeMorte = linhaDoLogSplitada[3].split("by");
+                String deathName = linhaTipoDeMorte[1];
+                String[] killInfo = linhaDoLogSplitada[2].split(" ");// [1] = quem matou; [2] = quem morreu; [3] = como
+                // morreu
+                computarTipoDeMorte(Integer.parseInt(killInfo[3]), deathName, partida.getDeathTypes());
                 int idMatador = Integer.parseInt(killInfo[1]);
                 int idVitima = Integer.parseInt(killInfo[2]);
                 computarKills(idMatador, idVitima, partida.getPlayers());
@@ -117,6 +120,17 @@ public class GameSetter {
         players.get(playerIndex).setKills(killsAtuais - 1);
     }
 
+    private static void computarTipoDeMorte(int deathId, String deathname, ArrayList<DeathType> deathTypes) {
+        for (int i = 0; i < deathTypes.size(); i++) {
+            if (deathId == deathTypes.get(i).getId()) {
+                deathTypes.get(i).setTotal(deathTypes.get(i).getTotal() + 1);
+                return;
+            }
+        }
+        DeathType death = new DeathType(deathId, deathname);
+        deathTypes.add(death);
+    }
+
     private static void computarKills(int idMatador, int idVitima, ArrayList<Player> players) {
         int index;
         if (idMatador == 1022) {
@@ -137,33 +151,32 @@ public class GameSetter {
         players.remove(index);
     }
 
-    public static String gerarRelatorio(ArrayList<Game> partidas){
-        String relatorio= "-RELATÓRIO GERAL-\n";
+    public static String gerarRelatorio(ArrayList<Game> partidas) {
+        String relatorio = "-RELATÓRIO GERAL-\n";
         for (int i = 0; i < partidas.size(); i++) {
-            relatorio += gerarRelatorio(i+1, partidas)+"\n";
+            relatorio += gerarRelatorio(i + 1, partidas) + "\n";
         }
         return relatorio;
     }
 
-    public static String gerarRelatorio(int gameId, ArrayList<Game> partidas){
-        //TODO exception caso não ache a partida
-        String relatorio ="-RELATÓRIO PARTIDA " + gameId+"-\n"+
-        "       Ranking:\n";
+    public static String gerarRelatorio(int gameId, ArrayList<Game> partidas) {
+        // TODO exception caso não ache a partida
+        String relatorio = "-RELATÓRIO PARTIDA " + gameId + "-\n" + "       Ranking:\n";
         Game partida = retornarPartidaPorId(gameId, partidas);
         Collections.sort(partida.getPlayers());
         for (int i = 0; i < partida.getPlayers().size(); i++) {
-            relatorio += "  " + (i+1) + "-" +partida.getPlayers().get(i).getNick()+ "," + partida.getPlayers().get(i).getKills()+ " Kills"+
-            "\n";
+            relatorio += "  " + (i + 1) + "-" + partida.getPlayers().get(i).getNick() + ","
+                    + partida.getPlayers().get(i).getKills() + " Kills" + "\n";
         }
         return relatorio;
     }
 
-    private static Game retornarPartidaPorId(int gameId, ArrayList<Game> partidas){
+    private static Game retornarPartidaPorId(int gameId, ArrayList<Game> partidas) {
         for (Game game : partidas) {
-           if(game.getId() == gameId){
-               return game;
-           }
-       }
-       return null;
+            if (game.getId() == gameId) {
+                return game;
+            }
+        }
+        return null;
     }
 }
