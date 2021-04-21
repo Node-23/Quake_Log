@@ -1,6 +1,5 @@
 package controladores;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -15,25 +14,20 @@ public class GameSetter {
         int init = -1;
         ArrayList<GameLineReference> gameLineReferences = new ArrayList<GameLineReference>();
         ArrayList<Game> partidas = new ArrayList<Game>();
-        try {
-            String[] log = LogReader.reader(scanner);
-            for (int i = 0; i < log.length; i++) {
-                if (log[i].contains("InitGame:")) {
-                    init = i + 1; // Queremos a linha após o initgame, logo i+1
-                }
-                if (log[i].contains("------------------------------------------------------------") && init != -1) {
-                    gameLineReferences.add(new GameLineReference(init, i - 1)); // Queremos a linha antes do
-                                                                                // shutdowngame logo, i-1
-                    init = -1;
-                }
+        String[] log = LogReader.reader(scanner);
+        for (int i = 0; i < log.length; i++) {
+            if (log[i].contains("InitGame:")) {
+                init = i + 1; // Queremos a linha após o initgame, logo i+1
             }
+            if (log[i].contains("------------------------------------------------------------") && init != -1) {
+                gameLineReferences.add(new GameLineReference(init, i - 1)); // Queremos a linha antes do
+                                                                            // shutdowngame logo, i-1
+                init = -1;
+            }
+        }
 
-            for (int i = 0; i < gameLineReferences.size(); i++) {
-                partidas.add(criadorDePartidas(i + 1, gameLineReferences.get(i), log));
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        for (int i = 0; i < gameLineReferences.size(); i++) {
+            partidas.add(criadorDePartidas(i + 1, gameLineReferences.get(i), log));
         }
 
         return partidas;
@@ -47,15 +41,15 @@ public class GameSetter {
         for (int i = inicio; i <= fim; i++) {
             if (log[i].contains("ClientConnect:")) {
                 String[] linhaDoLogSplitada = log[i].split(" ");
-                int playerId = separarId(linhaDoLogSplitada); // TODO exception caso não ache o id do player
+                int playerId = separarId(linhaDoLogSplitada);
                 partida.setPlayers(new Player(playerId));
                 continue;
             }
 
             if (log[i].contains("ClientUserinfoChanged:")) {
                 String[] linhaDoLogSplitada = log[i].split(" ");
-                int playerId = separarId(linhaDoLogSplitada); // TODO exception caso não ache o id do player
-                int index = pegarIndexPlayer(playerId, partida.getPlayers()); // TODO exception caso não ache o player
+                int playerId = separarId(linhaDoLogSplitada);
+                int index = pegarIndexPlayer(playerId, partida.getPlayers());
                 String[] clientInfo = log[i].split("\\\\");
                 String nick = clientInfo[1];
                 partida.getPlayers().get(index).setNick(nick);
@@ -79,7 +73,7 @@ public class GameSetter {
 
             if (log[i].contains("ClientDisconnect:")) {
                 String[] linhaDoLogSplitada = log[i].split(" ");
-                int playerId = separarId(linhaDoLogSplitada); // TODO exception caso não ache o id do player
+                int playerId = separarId(linhaDoLogSplitada);
                 playerDesconectado(playerId, partida.getPlayers());
                 continue;
             }
@@ -95,9 +89,6 @@ public class GameSetter {
         }
         return -1;
     }
-
-    // TODO mudar esse método para ao receber o id devolver um player(Deixaria o
-    // código mais limpo)
     private static int pegarIndexPlayer(int playerId, ArrayList<Player> players) {
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).getId() == playerId) {
@@ -160,7 +151,6 @@ public class GameSetter {
     }
 
     public static String gerarRelatorio(int gameId, ArrayList<Game> partidas) {
-        // TODO exception caso não ache a partida
         String relatorio = "-RELATÓRIO PARTIDA " + gameId + "-\n" + "       Ranking:\n";
         Game partida = retornarPartidaPorId(gameId, partidas);
         Collections.sort(partida.getPlayers());

@@ -1,7 +1,9 @@
 package controladores;
 
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
@@ -18,9 +20,12 @@ public class Writer {
             escritorDeArquivo.append(relatorio);
             escritorDeArquivo.close();
             System.out.println("Relatório criado!");
-        } catch (Exception e) {
-            System.out.println(e);
-            // TODO: handle exception
+        } catch (FileNotFoundException e) {
+            System.out.println("INFORME UM CAMINHO VÁLIDO!\n");
+            Writer.criarRelatórioDePartida(relatorio,scanner,tipoDeRelatorio);
+        } catch (IOException e) {
+            System.out.println("INFORME UM CAMINHO VÁLIDO!\n");            
+            Writer.criarRelatórioDePartida(relatorio,scanner,tipoDeRelatorio);
         }
     }
 }
